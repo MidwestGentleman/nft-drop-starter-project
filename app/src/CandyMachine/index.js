@@ -21,7 +21,6 @@ const opts = {
 
 const CandyMachine = ({ walletAddress }) => {
   const [candyMachine, setCandyMachine] = useState(null);
-  
   useEffect(() => {
 
     const getCandyMachineState = async () => {
@@ -42,7 +41,7 @@ const CandyMachine = ({ walletAddress }) => {
       const itemsAvailable = candyMachine.data.itemsAvailable.toNumber();
       const itemsRedeemed = candyMachine.itemsRedeemed.toNumber();
       const itemsRemaining = itemsAvailable - itemsRedeemed;
-      const goLiveDate = candyMachine.data.goLiveDate.toNumber();
+      const goLiveData = candyMachine.data.goLiveDate.toNumber();
       const presale =
         candyMachine.data.whitelistMintSettings &&
         candyMachine.data.whitelistMintSettings.presale &&
@@ -50,7 +49,9 @@ const CandyMachine = ({ walletAddress }) => {
           candyMachine.data.goLiveDate.toNumber() > new Date().getTime() / 1000);
       
         // We will be using this later in our UI so let's generate this now
-        const goLiveDateTimeString = `${new Date(goLiveDate * 1000).toGMTString()}`
+        const goLiveDateTimeString = `${new Date(
+          goLiveData * 1000
+        ).toGMTString()}`
         setCandyMachine({
           id: process.env.REACT_APP_CANDY_MACHINE_ID,
           program,
@@ -58,7 +59,7 @@ const CandyMachine = ({ walletAddress }) => {
             itemsAvailable,
             itemsRedeemed,
             itemsRemaining,
-            goLiveDate,
+            goLiveData,
             goLiveDateTimeString,
             isSoldOut: itemsRemaining === 0,
             isActive:
@@ -70,7 +71,7 @@ const CandyMachine = ({ walletAddress }) => {
                   : itemsRedeemed < candyMachine.endSettings.number.toNumber()
                 : true),
             isPresale: presale,
-            //goLiveDate: candyMachine.data.goLiveDate,
+            goLiveDate: candyMachine.data.goLiveDate,
             treasury: candyMachine.wallet,
             tokenMint: candyMachine.tokenMint,
             gatekeeper: candyMachine.data.gatekeeper,
@@ -84,14 +85,13 @@ const CandyMachine = ({ walletAddress }) => {
           itemsAvailable,
           itemsRedeemed,
           itemsRemaining,
-          goLiveDate,
+          goLiveData,
           goLiveDateTimeString,
           presale,
         });
     };
     getCandyMachineState();
   },[]);
-  
 
   const getProvider = () => {
     const rpcHost = process.env.REACT_APP_SOLANA_RPC_HOST;
